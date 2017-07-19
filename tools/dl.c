@@ -146,9 +146,10 @@ int main(int ac, char* av[])
   gc_error_free GError *local_err = NULL;
   gc_regex_unref GRegex *file_regex = NULL, *folder_regex = NULL;
   gint i;
+  mega_session* s;
   int status = 0;
 
-  tool_init(&ac, &av, "- download exported files from mega.nz", entries, 0);
+  tool_init(&ac, &av, "- download exported files from mega.nz", entries, TOOL_INIT_AUTH);
 
   if (!strcmp(opt_path, "-"))
   {
@@ -184,7 +185,9 @@ int main(int ac, char* av[])
 
   // create session
 
-  s = tool_start_session(0);
+  s = tool_start_session(TOOL_SESSION_OPEN);
+  if (!s)
+      return 1;
 
   mega_session_watch_status(s, status_callback, NULL);
 
